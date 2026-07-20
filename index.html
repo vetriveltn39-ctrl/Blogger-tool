@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inkline — Free SEO & Writing Tools for Bloggers</title>
+<meta name="description" content="Free online toolkit for bloggers: word counter, keyword density checker, meta title & description length checker, readability score, and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12182B;
+    --ink-2:#1C2440;
+    --paper:#F6F1E4;
+    --paper-dim:#EBE3D0;
+    --amber:#E3A23C;
+    --teal:#3F8E85;
+    --charcoal:#1A1A1A;
+    --line: rgba(246,241,228,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+
+  /* NAV */
+  nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:rgba(18,24,43,0.85); border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:72px;}
+  .logo{font-family:'Fraunces',serif; font-size:22px; font-weight:700; display:flex; align-items:center; gap:8px;}
+  .logo-mark{width:10px; height:10px; background:var(--amber); border-radius:2px; transform:rotate(45deg);}
+  .navlinks{display:flex; gap:32px; font-size:14px; color:rgba(246,241,228,0.7);}
+  .navlinks a{text-decoration:none; transition:color .2s;}
+  .navlinks a:hover{color:var(--amber);}
+
+  /* HERO */
+  .hero{padding:96px 0 72px; border-bottom:1px solid var(--line); position:relative; overflow:hidden;}
+  .badge-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;}
+  .mini-badge{font-size:12.5px; background:var(--ink-2); border:1px solid var(--line); padding:6px 12px; border-radius:20px; color:rgba(246,241,228,0.75);}
+  .demo-card{position:relative;}
+  .float-emoji{position:absolute; font-size:26px; opacity:0.85; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.3));}
+  .float-emoji.e1{top:-16px; right:24px; animation:float1 5s ease-in-out infinite;}
+  .float-emoji.e2{bottom:-14px; left:-14px; animation:float2 6s ease-in-out infinite;}
+  @keyframes float1{0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-10px) rotate(4deg);}}
+  @keyframes float2{0%,100%{transform:translateY(0) rotate(4deg);} 50%{transform:translateY(8px) rotate(-4deg);}}
+  .card-icon{font-size:20px; display:inline-block; margin-bottom:2px;}
+  .hero-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;}
+  .eyebrow{font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:18px; display:block;}
+  .hero h1{font-size:56px; line-height:1.05; margin-bottom:22px;}
+  .hero h1 em{font-style:italic; color:var(--amber);}
+  .hero p{font-size:17px; color:rgba(246,241,228,0.72); max-width:480px; margin-bottom:32px;}
+  .cta-row{display:flex; gap:14px;}
+  .btn{display:inline-block; padding:14px 26px; border-radius:6px; font-size:14px; font-weight:600; text-decoration:none; cursor:pointer; border:1px solid transparent;}
+  .btn-primary{background:var(--amber); color:var(--ink);}
+  .btn-primary:hover{background:#f0b358;}
+  .btn-ghost{border-color:var(--line); color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber);}
+
+  /* live word counter card */
+  .demo-card{background:var(--ink-2); border:1px solid var(--line); border-radius:14px; padding:26px;}
+  .demo-card .demo-label{font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(246,241,228,0.5); margin-bottom:12px;}
+  .demo-card textarea{width:100%; min-height:120px; background:transparent; border:none; outline:none; color:var(--paper); font-family:'Inter',sans-serif; font-size:15px; resize:vertical;}
+  .demo-stats{display:flex; gap:22px; margin-top:16px; padding-top:16px; border-top:1px solid var(--line); flex-wrap:wrap;}
+  .demo-stats div{font-family:'Space Mono',monospace;}
+  .demo-stats .num{font-size:22px; color:var(--amber); display:block;}
+  .demo-stats .lbl{font-size:11px; color:rgba(246,241,228,0.5); text-transform:uppercase;}
+
+  /* TOOLS SECTION */
+  section{padding:80px 0;}
+  .section-head{margin-bottom:44px;}
+  .section-head .eyebrow{margin-bottom:10px;}
+  .section-head h2{font-size:34px; color:var(--paper);}
+  .section-head p{color:rgba(246,241,228,0.6); font-size:15px; margin-top:8px; max-width:560px;}
+
+  .tool-group{margin-bottom:52px;}
+  .tool-group-title{font-family:'Space Mono',monospace; font-size:13px; color:var(--teal); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+  .tool-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .tool-card{background:var(--ink-2); border:1px solid var(--line); border-radius:12px; padding:22px; transition:border-color .2s, transform .2s; display:block; text-decoration:none;}
+  .tool-card:hover{border-color:var(--amber); transform:translateY(-3px);}
+  .tool-card .tag{font-family:'Space Mono',monospace; font-size:10px; color:var(--amber); text-transform:uppercase;}
+  .tool-card h3{font-size:18px; margin:10px 0 8px; color:var(--paper); font-family:'Inter',sans-serif; font-weight:600;}
+  .tool-card p{font-size:13.5px; color:rgba(246,241,228,0.6);}
+
+  /* META CHECKER TOOL */
+  .live-tool{background:var(--paper); color:var(--charcoal); border-radius:16px; padding:36px;}
+  .live-tool h3{font-size:22px; margin-bottom:6px;}
+  .live-tool .sub{color:#5c5646; font-size:14px; margin-bottom:22px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12px; font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:0.05em; color:#6b6454; margin-bottom:6px;}
+  .field input{width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal);}
+  .field input:focus{outline:none; border-color:var(--teal);}
+  .field .count{font-family:'Space Mono',monospace; font-size:12px; margin-top:5px;}
+  .count.ok{color:#2d7d6f;} .count.warn{color:#c0392b;}
+
+  footer{border-top:1px solid var(--line); padding:36px 0; text-align:center; color:rgba(246,241,228,0.45); font-size:13px;}
+
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:38px;}
+    .tool-grid{grid-template-columns:1fr 1fr;}
+    .navlinks{display:none;}
+  }
+  @media(max-width:520px){
+    .tool-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="logo-mark"></span>Inkline</div>
+    <div class="navlinks">
+      <a href="#tools">Tools</a>
+      <a href="#ai-checker">AI Checker</a>
+      <a href="#rank-checker">Rank Check</a>
+      <a href="#image-search">Images</a>
+      <a href="#keyword-density">Density</a>
+      <a href="#grammar-checker">Grammar</a>
+      <a href="#keyword-research">Research</a>
+      <a href="#article-builder">Article Builder</a>
+      <a href="#meta-checker">Meta Checker</a>
+      <a href="#about">About</a>
+    </div>
+    <a href="#tools" class="btn btn-primary" style="padding:10px 20px;">Get Started</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge-row">
+        <span class="mini-badge">📝 Writing</span>
+        <span class="mini-badge">🔍 SEO</span>
+        <span class="mini-badge">🖼️ Images</span>
+        <span class="mini-badge">✅ Grammar</span>
+      </div>
+      <span class="eyebrow">Free toolkit · No sign-up</span>
+      <h1>Everything a blogger needs, minus the <em>fifteen tabs.</em> ✨</h1>
+      <p>Word count, keyword density, meta length, readability — the small checks that decide whether a post ranks. One page, all of them, free.</p>
+      <div class="cta-row">
+        <a href="#tools" class="btn btn-primary">Browse tools →</a>
+        <a href="#meta-checker" class="btn btn-ghost">Try meta checker</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <span class="float-emoji e1">📊</span>
+      <span class="float-emoji e2">🎯</span>
+      <div class="demo-label">✍️ Live word counter — paste your draft</div>
+      <textarea id="wcInput" placeholder="Start typing or paste your blog draft here..."></textarea>
+      <div class="demo-stats">
+        <div><span class="num" id="wcWords">0</span><span class="lbl">Words</span></div>
+        <div><span class="num" id="wcChars">0</span><span class="lbl">Characters</span></div>
+        <div><span class="num" id="wcSentences">0</span><span class="lbl">Sentences</span></div>
+        <div><span class="num" id="wcRead">0 min</span><span class="lbl">Read time</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The toolkit</span>
+      <h2>Tools organized the way you actually write</h2>
+      <p>Grouped by the stage of writing they belong to — drafting, optimizing, and publishing.</p>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-group-title">01 — Writing & Grammar</div>
+      <div class="tool-grid">
+        <a href="#grammar-checker" class="tool-card"><span class="card-icon">✅</span><span class="tag">Editing</span><h3>Grammar & Spelling Checker</h3><p>Catches typos, punctuation slips, and awkward sentence construction before you hit publish.</p></a>
+        <a href="#ai-checker" class="tool-card"><span class="card-icon">🤖</span><span class="tag">Style</span><h3>AI-to-Human Rewriter</h3><p>Rewrites AI-generated drafts into natural, varied sentence rhythm that reads human.</p></a>
+        <a href="#article-builder" class="tool-card"><span class="card-icon">🧩</span><span class="tag">New</span><h3>Article SEO Builder</h3><p>Paste a full draft — get image placement, meta description, and link-building suggestions automatically.</p></a>
+      </div>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-group-title">02 — SEO & Research</div>
+      <div class="tool-grid">
+        <a href="#keyword-research" class="tool-card"><span class="card-icon">🔍</span><span class="tag">Research</span><h3>Keyword Research Tool</h3><p>Related terms and question ideas for any seed keyword.</p></a>
+        <a href="#keyword-density" class="tool-card"><span class="card-icon">📊</span><span class="tag">Density</span><h3>Keyword Density Checker</h3><p>Paste your draft and your target keyword to check you're not over- or under-optimizing.</p></a>
+        <a href="#rank-checker" class="tool-card"><span class="card-icon">🎯</span><span class="tag">Tracking</span><h3>Rank Checker</h3><p>Quickly check where your post sits on Google for its target keyword.</p></a>
+      </div>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-group-title">03 — Meta & Publishing</div>
+      <div class="tool-grid">
+        <a href="#meta-checker" class="tool-card"><span class="card-icon">🏷️</span><span class="tag">On-page</span><h3>Meta Title & Description</h3><p>Checks your title and description stay inside Google's display limits.</p></a>
+        <a href="#image-search" class="tool-card"><span class="card-icon">🖼️</span><span class="tag">Visual</span><h3>Free Image Finder</h3><p>Search free, licensed stock photos for your blog banner or in-post images.</p></a>
+        <a href="#article-builder" class="tool-card"><span class="card-icon">🔗</span><span class="tag">Structure</span><h3>Link & Image Placement</h3><p>Get exact spots to add internal links, external links, and images in your draft.</p></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai-checker">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>AI Checker & Humanizer</h2>
+      <p>Paste text to get a pattern-based AI-likelihood signal, then humanize it into more natural, varied phrasing. Heuristic, not a certified detector — use it as a guideline.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Paste your text</h3>
+      <p class="sub">We check sentence-length variety, repeated AI-style phrases, and word variety to estimate an "AI-pattern score."</p>
+      <div class="field">
+        <textarea id="aiInput" rows="7" style="width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal); font-family:'Inter',sans-serif;" placeholder="Paste a paragraph here..."></textarea>
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="checkBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Check text</button>
+        <button id="humanizeBtn" class="btn btn-ghost" style="border-color:#c9bf9f; color:var(--charcoal); cursor:pointer;">Humanize text</button>
+      </div>
+
+      <div id="aiResult" style="display:none; margin-bottom:20px; padding:18px; border-radius:10px; background:#efe8d6;">
+        <div style="font-family:'Space Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:8px;">AI-pattern score</div>
+        <div id="scoreLabel" style="font-family:'Fraunces',serif; font-size:24px; margin-bottom:10px;">—</div>
+        <ul id="scoreReasons" style="font-size:13.5px; color:#5c5646; padding-left:18px; line-height:1.7;"></ul>
+      </div>
+
+      <div class="field">
+        <label>Humanized output</label>
+        <textarea id="aiOutput" rows="7" readonly style="width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal); font-family:'Inter',sans-serif;" placeholder="Humanized version will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rank-checker">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>Quick Rank Check</h2>
+      <p>Opens Google with 100 results for your keyword — use Ctrl+F (Cmd+F on Mac) to find your domain fast.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Check where you rank</h3>
+      <p class="sub">This won't auto-detect your position — Google blocks that from browser scripts. It gets you a 100-result page and jumps you straight to searching for your own domain.</p>
+      <div class="field">
+        <label>Your Domain (e.g. inkline.com)</label>
+        <input type="text" id="domainInput" placeholder="yourblog.com">
+      </div>
+      <div class="field">
+        <label>Target Keyword</label>
+        <input type="text" id="keywordInput" placeholder="best seo tools for bloggers">
+      </div>
+      <div class="cta-row" style="margin-bottom:14px;">
+        <button id="rankCheckBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Open Google & Check</button>
+      </div>
+      <div id="rankHint" style="display:none; font-size:13px; color:#5c5646; background:#efe8d6; padding:14px 16px; border-radius:8px;">
+        A new tab opened with 100 Google results for your keyword. Press <strong class="mono">Ctrl+F</strong> (or <strong class="mono">Cmd+F</strong>) in that tab and type your domain to jump straight to your listing.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="image-search">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>Free Stock Image Finder</h2>
+      <p>Search millions of free, licensed images for your blog posts — powered by Pexels. Get a free API key once, then search unlimited images anytime.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Search free stock photos</h3>
+      <p class="sub">Need a free Pexels API key first — takes under a minute: visit <a href="https://www.pexels.com/api/" target="_blank" style="color:var(--teal); text-decoration:underline;">pexels.com/api</a>, sign up, copy your key below. It's saved only in this browser.</p>
+
+      <div class="field">
+        <label>Pexels API Key</label>
+        <input type="text" id="pexelsKey" placeholder="Paste your free Pexels API key here">
+      </div>
+      <div class="field">
+        <label>Search Term</label>
+        <input type="text" id="imgQuery" placeholder="e.g. laptop coffee blogging">
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="imgSearchBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Search Images</button>
+      </div>
+      <div id="imgStatus" style="font-size:13px; color:#5c5646; margin-bottom:14px;"></div>
+      <div id="imgGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;"></div>
+    </div>
+  </div>
+</section>
+
+<section id="keyword-density">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>Keyword Density Checker</h2>
+      <p>Paste your draft and target keyword — see exactly how often it appears and whether you're in the healthy 1–2% range.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Check your keyword density</h3>
+      <div class="field">
+        <label>Target Keyword / Phrase</label>
+        <input type="text" id="kdKeyword" placeholder="e.g. best seo tools for bloggers">
+      </div>
+      <div class="field">
+        <textarea id="kdText" rows="8" style="width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal); font-family:'Inter',sans-serif;" placeholder="Paste your blog draft here..."></textarea>
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="kdCheckBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Check Density</button>
+      </div>
+
+      <div id="kdResult" style="display:none; padding:18px; border-radius:10px; background:#efe8d6;">
+        <div style="display:flex; gap:28px; flex-wrap:wrap; margin-bottom:14px;">
+          <div><span class="mono" id="kdCount" style="font-size:22px; color:var(--teal); display:block;">0</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Occurrences</span></div>
+          <div><span class="mono" id="kdTotal" style="font-size:22px; color:var(--teal); display:block;">0</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Total Words</span></div>
+          <div><span class="mono" id="kdPercent" style="font-size:22px; display:block;">0%</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Density</span></div>
+        </div>
+        <div id="kdVerdict" style="font-size:14px; font-weight:600;"></div>
+
+        <div style="margin-top:18px; padding-top:14px; border-top:1px solid #d8cfb4;">
+          <div style="font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:10px;">Top repeated words (excluding common words)</div>
+          <div id="kdTopWords" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="article-builder">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live 🧩</span>
+      <h2>Article SEO Builder</h2>
+      <p>Paste your full draft and your focus keyword — get it broken into sections with exactly where to add images, internal links, external links, and a ready meta description. No keyword stuffing, no guesswork.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Paste your full article</h3>
+      <div class="field">
+        <label>Focus Keyword</label>
+        <input type="text" id="abKeyword" placeholder="e.g. thaimaman gold ring scheme">
+      </div>
+      <div class="field">
+        <textarea id="abText" rows="10" style="width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal); font-family:'Inter',sans-serif;" placeholder="Paste your full blog post here — as one block of text, paragraphs separated by blank lines..."></textarea>
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="abBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Build SEO Plan</button>
+      </div>
+
+      <div id="abResult" style="display:none;">
+
+        <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:22px; padding:16px; background:#efe8d6; border-radius:10px;">
+          <div><span class="mono" id="abWords" style="font-size:20px; color:var(--teal); display:block;">0</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Words</span></div>
+          <div><span class="mono" id="abKwCount" style="font-size:20px; display:block;">0</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Keyword uses</span></div>
+          <div><span class="mono" id="abKwDensity" style="font-size:20px; display:block;">0%</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Density</span></div>
+          <div><span class="mono" id="abImages" style="font-size:20px; color:var(--teal); display:block;">0</span><span style="font-size:11px; text-transform:uppercase; color:#6b6454;">Suggested images</span></div>
+        </div>
+
+        <div style="margin-bottom:22px;">
+          <div style="font-family:'Space Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:10px;">📋 Suggested meta description (copy-ready)</div>
+          <div id="abMeta" style="background:#fffdf7; border:1px solid #d8cfb4; border-radius:8px; padding:14px 16px; font-size:14px; color:#3a3626;"></div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <div style="font-family:'Space Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:10px;">📖 Structured layout — exactly where to place things</div>
+          <div id="abLayout" style="display:flex; flex-direction:column; gap:14px;"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="grammar-checker">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>Grammar & Spelling Checker</h2>
+      <p>Paste your draft — get real grammar, spelling, and style suggestions powered by LanguageTool's free engine.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Check your writing</h3>
+      <div class="field">
+        <textarea id="gcText" rows="8" style="width:100%; padding:12px 14px; border:1.5px solid #d8cfb4; border-radius:8px; font-size:15px; background:#fffdf7; color:var(--charcoal); font-family:'Inter',sans-serif;" placeholder="Paste your blog draft here..."></textarea>
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="gcCheckBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Check Grammar</button>
+      </div>
+      <div id="gcStatus" style="font-size:13px; color:#5c5646; margin-bottom:14px;"></div>
+      <div id="gcResults"></div>
+    </div>
+  </div>
+</section>
+
+<section id="keyword-research">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tool · Live</span>
+      <h2>Keyword Research</h2>
+      <p>Type a seed keyword — get related and co-occurring terms to build your topic cluster. No search-volume data (that needs a paid API); this is for idea generation.</p>
+    </div>
+
+    <div class="live-tool">
+      <h3>Find related keywords</h3>
+      <div class="field">
+        <label>Seed Keyword</label>
+        <input type="text" id="krSeed" placeholder="e.g. blogging tips">
+      </div>
+      <div class="cta-row" style="margin-bottom:20px;">
+        <button id="krBtn" class="btn btn-primary" style="border:none; font-family:'Inter',sans-serif; cursor:pointer;">Find Related Keywords</button>
+      </div>
+      <div id="krStatus" style="font-size:13px; color:#5c5646; margin-bottom:14px;"></div>
+
+      <div id="krCols" style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:10px;">Related terms</div>
+          <div id="krRelated" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#6b6454; margin-bottom:10px;">"How / What / Why" question ideas</div>
+          <div id="krQuestions" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="meta-checker">
+  <div class="wrap">
+    <div class="live-tool">
+      <h3>Meta Title & Description Checker</h3>
+      <p class="sub">Type your title and description — see live if they fit Google's display limits.</p>
+      <div class="field">
+        <label>Meta Title</label>
+        <input type="text" id="titleInput" placeholder="Your SEO title here...">
+        <div class="count" id="titleCount">0 / 60 characters</div>
+      </div>
+      <div class="field">
+        <label>Meta Description</label>
+        <input type="text" id="descInput" placeholder="Your meta description here...">
+        <div class="count" id="descCount">0 / 160 characters</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="wrap">
+    <div>Inkline — a free toolkit for independent bloggers. Built for writers, not algorithms.</div>
+    <div style="margin-top:14px; font-size:12px; color:rgba(246,241,228,0.35);">
+      Images by <a href="https://www.pexels.com" target="_blank" style="text-decoration:underline;">Pexels</a> ·
+      Grammar checking by <a href="https://languagetool.org" target="_blank" style="text-decoration:underline;">LanguageTool</a> ·
+      Keyword data by <a href="https://www.datamuse.com" target="_blank" style="text-decoration:underline;">Datamuse</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Live word counter
+  const wcInput = document.getElementById('wcInput');
+  wcInput.addEventListener('input', () => {
+    const text = wcInput.value.trim();
+    const words = text.length ? text.split(/\s+/).length : 0;
+    const chars = wcInput.value.length;
+    const sentences = text.length ? (text.match(/[.!?]+/g) || []).length : 0;
+    const readMin = Math.max(1, Math.round(words / 200));
+    document.getElementById('wcWords').textContent = words;
+    document.getElementById('wcChars').textContent = chars;
+    document.getElementById('wcSentences').textContent = sentences;
+    document.getElementById('wcRead').textContent = (words ? readMin : 0) + ' min';
+  });
+
+  // Meta title/description checker
+  function bindCounter(inputId, countId, limit){
+    const input = document.getElementById(inputId);
+    const count = document.getElementById(countId);
+    input.addEventListener('input', () => {
+      const len = input.value.length;
+      count.textContent = len + ' / ' + limit + ' characters';
+      count.className = 'count ' + (len <= limit ? 'ok' : 'warn');
+    });
+  }
+  bindCounter('titleInput','titleCount',60);
+  bindCounter('descInput','descCount',160);
+
+  // AI Pattern Checker (heuristic, not a certified detector)
+  const AI_PHRASES = ["in conclusion","furthermore","it is important to note","in today's world",
+    "delve into","a testament to","plays a crucial role","in the realm of","navigate the complexities",
+    "on the other hand","in summary","it's worth noting","overall,","as a result,"];
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    const text = document.getElementById('aiInput').value.trim();
+    const resultBox = document.getElementById('aiResult');
+    const label = document.getElementById('scoreLabel');
+    const reasons = document.getElementById('scoreReasons');
+    reasons.innerHTML = '';
+    if(!text){ resultBox.style.display='none'; return; }
+
+    const sentences = text.split(/(?<=[.!?])\s+/).filter(s=>s.trim().length>0);
+    const lengths = sentences.map(s => s.trim().split(/\s+/).length);
+    const avgLen = lengths.reduce((a,b)=>a+b,0)/lengths.length;
+    const variance = lengths.reduce((a,b)=>a+Math.pow(b-avgLen,2),0)/lengths.length;
+    const stdDev = Math.sqrt(variance);
+
+    const lower = text.toLowerCase();
+    const phraseHits = AI_PHRASES.filter(p => lower.includes(p));
+
+    const words = lower.match(/[a-z']+/g) || [];
+    const uniqueRatio = words.length ? new Set(words).size / words.length : 1;
+
+    let score = 0;
+    const notes = [];
+    if(stdDev < 3 && sentences.length > 3){ score += 35; notes.push('Sentence lengths are very uniform — a common AI-writing pattern.'); }
+    else { notes.push('Sentence length varies naturally — human-like rhythm.'); }
+
+    if(phraseHits.length){ score += Math.min(40, phraseHits.length*15); notes.push('Contains common AI stock phrases: "' + phraseHits.join('", "') + '".'); }
+    else { notes.push('No common AI stock phrases detected.'); }
+
+    if(uniqueRatio < 0.45 && words.length > 30){ score += 25; notes.push('Lower word variety than typical human writing.'); }
+    else { notes.push('Healthy word variety.'); }
+
+    score = Math.min(100, score);
+    label.textContent = score + '% AI-pattern likelihood';
+    label.style.color = score > 55 ? '#c0392b' : (score > 25 ? '#b8860b' : '#2d7d6f');
+    notes.forEach(n => { const li = document.createElement('li'); li.textContent = n; reasons.appendChild(li); });
+    resultBox.style.display = 'block';
+  });
+
+  // Rule-based Humanizer
+  const SYN = {
+    "utilize":"use", "utilizes":"uses", "furthermore":"also", "moreover":"also",
+    "in conclusion":"so, in the end", "delve into":"dig into", "a testament to":"proof of",
+    "crucial":"key", "essential":"key", "significant":"big", "numerous":"many",
+    "in today's world":"these days", "it is important to note that":"worth noting:",
+    "navigate the complexities of":"work through", "plays a crucial role in":"matters a lot for",
+    "in the realm of":"in", "overall,":"all in all,", "in summary,":"to sum up,",
+    "on the other hand,":"then again,", "additionally,":"also,", "therefore,":"so,"
+  };
+
+  function humanize(text){
+    let out = text;
+    Object.keys(SYN).sort((a,b)=>b.length-a.length).forEach(k=>{
+      const re = new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      out = out.replace(re, SYN[k]);
+    });
+    // vary sentence starts slightly by splitting long uniform sentences
+    out = out.replace(/, and /g, out.length % 2 === 0 ? ', and ' : '. And ');
+    return out;
+  }
+
+  document.getElementById('humanizeBtn').addEventListener('click', () => {
+    const text = document.getElementById('aiInput').value.trim();
+    document.getElementById('aiOutput').value = text ? humanize(text) : '';
+  });
+
+  // Quick Rank Check
+  document.getElementById('rankCheckBtn').addEventListener('click', () => {
+    const domain = document.getElementById('domainInput').value.trim();
+    const keyword = document.getElementById('keywordInput').value.trim();
+    if(!keyword) return;
+    const query = encodeURIComponent(keyword);
+    const url = 'https://www.google.com/search?q=' + query + '&num=100';
+    window.open(url, '_blank');
+    const hint = document.getElementById('rankHint');
+    hint.style.display = 'block';
+    if(domain){
+      hint.innerHTML = 'A new tab opened with 100 Google results for your keyword. Press <strong class="mono">Ctrl+F</strong> (or <strong class="mono">Cmd+F</strong>) and type <strong>' + domain + '</strong> to jump straight to your listing.';
+    }
+  });
+
+  // Keyword Density Checker
+  const STOPWORDS = new Set(["the","a","an","is","are","was","were","and","or","but","of","in","on","to","for","with","this","that","it","as","at","by","be","from","your","you","we","our","they","their","i","not","have","has","had","will","can","if","so","what","which","when","how"]);
+
+  document.getElementById('kdCheckBtn').addEventListener('click', () => {
+    const keyword = document.getElementById('kdKeyword').value.trim().toLowerCase();
+    const text = document.getElementById('kdText').value.trim();
+    const result = document.getElementById('kdResult');
+    if(!keyword || !text){ result.style.display='none'; return; }
+
+    const lower = text.toLowerCase();
+    const words = lower.match(/[a-z0-9']+/g) || [];
+    const totalWords = words.length;
+
+    // count keyword occurrences (supports multi-word phrases)
+    const kwWords = keyword.split(/\s+/).length;
+    const re = new RegExp('\\b' + keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b','gi');
+    const matches = lower.match(re) || [];
+    const count = matches.length;
+    const density = totalWords ? ((count * kwWords) / totalWords * 100) : 0;
+
+    document.getElementById('kdCount').textContent = count;
+    document.getElementById('kdTotal').textContent = totalWords;
+    const pctEl = document.getElementById('kdPercent');
+    pctEl.textContent = density.toFixed(2) + '%';
+
+    const verdict = document.getElementById('kdVerdict');
+    if(count === 0){
+      pctEl.style.color = '#c0392b';
+      verdict.textContent = "Keyword not found in the text.";
+      verdict.style.color = '#c0392b';
+    } else if(density < 0.5){
+      pctEl.style.color = '#c0392b';
+      verdict.textContent = 'Too low — Google may not clearly associate this post with your keyword. Aim for 1–2%.';
+      verdict.style.color = '#c0392b';
+    } else if(density <= 2){
+      pctEl.style.color = '#2d7d6f';
+      verdict.textContent = 'Healthy range — good keyword usage without stuffing.';
+      verdict.style.color = '#2d7d6f';
+    } else {
+      pctEl.style.color = '#c0392b';
+      verdict.textContent = 'Too high — this reads as keyword stuffing and can hurt rankings. Aim for 1–2%.';
+      verdict.style.color = '#c0392b';
+    }
+
+    // top repeated words excluding stopwords and the keyword itself
+    const freq = {};
+    words.forEach(w => { if(!STOPWORDS.has(w) && w.length > 2) freq[w] = (freq[w]||0)+1; });
+    const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const topWrap = document.getElementById('kdTopWords');
+    topWrap.innerHTML = '';
+    top.forEach(([w,c]) => {
+      const chip = document.createElement('span');
+      chip.style.cssText = 'background:#fffdf7; border:1px solid #d8cfb4; border-radius:20px; padding:5px 12px; font-size:12.5px; color:#3a3626;';
+      chip.textContent = w + ' × ' + c;
+      topWrap.appendChild(chip);
+    });
+
+    result.style.display = 'block';
+  });
+
+  // Grammar & Spelling Checker (LanguageTool free public API)
+  // Article SEO Builder
+  document.getElementById('abBtn').addEventListener('click', () => {
+    const keyword = document.getElementById('abKeyword').value.trim();
+    const raw = document.getElementById('abText').value.trim();
+    const result = document.getElementById('abResult');
+    if(!raw){ result.style.display='none'; return; }
+
+    const paras = raw.split(/\n\s*\n/).map(p=>p.trim()).filter(p=>p.length>0);
+    const fullLower = raw.toLowerCase();
+    const words = raw.trim().split(/\s+/);
+    const totalWords = words.length;
+
+    let kwCount = 0, density = 0;
+    if(keyword){
+      const re = new RegExp('\\b' + keyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b','gi');
+      kwCount = (fullLower.match(re) || []).length;
+      const kwWords = keyword.split(/\s+/).length;
+      density = totalWords ? ((kwCount*kwWords)/totalWords*100) : 0;
+    }
+
+    document.getElementById('abWords').textContent = totalWords;
+    document.getElementById('abKwCount').textContent = kwCount;
+    const densEl = document.getElementById('abKwDensity');
+    densEl.textContent = density.toFixed(2) + '%';
+    densEl.style.color = (density > 0.5 && density <= 2.2) ? '#2d7d6f' : '#c0392b';
+
+    // Meta description: first sentence containing the keyword, else first sentence, trimmed to 155 chars
+    const sentences = raw.split(/(?<=[.!?])\s+/);
+    let metaBase = sentences.find(s => keyword && s.toLowerCase().includes(keyword.toLowerCase())) || sentences[0] || raw;
+    let meta = metaBase.trim();
+    if(meta.length > 155) meta = meta.slice(0,152).trim() + '...';
+    document.getElementById('abMeta').textContent = meta;
+
+    // Build layout: walk paragraphs, insert image markers every ~130 words, link suggestions every 3rd paragraph
+    const layout = document.getElementById('abLayout');
+    layout.innerHTML = '';
+    let wordAcc = 0, imgCount = 0;
+    const addCard = (icon, label, text, color) => {
+      const c = document.createElement('div');
+      c.style.cssText = 'border-left:3px solid ' + color + '; padding:10px 14px; background:#fffdf7; border-radius:0 8px 8px 0;';
+      c.innerHTML = '<div style="font-size:12.5px; font-weight:700; color:'+color+'; margin-bottom:3px;">'+icon+' '+label+'</div><div style="font-size:13px; color:#5c5646;">'+text+'</div>';
+      layout.appendChild(c);
+    };
+
+    addCard('🏷️','Title / H1', 'Use your focus keyword near the start of the title. Keep it under 60 characters.', 'var(--teal)');
+    addCard('🖼️','Featured image', 'Add your main blog banner image right after the title, before the intro paragraph.', '#c98b2e');
+
+    paras.forEach((p, i) => {
+      const pWords = p.split(/\s+/).length;
+      wordAcc += pWords;
+      const textCard = document.createElement('div');
+      textCard.style.cssText = 'padding:10px 14px; background:transparent; border:1px dashed #d8cfb4; border-radius:8px; font-size:13px; color:#3a3626;';
+      textCard.textContent = 'Paragraph ' + (i+1) + ' (' + pWords + ' words): ' + (p.length > 90 ? p.slice(0,90)+'...' : p);
+      layout.appendChild(textCard);
+
+      if(i === 0){
+        addCard('🔑','Keyword placement', 'Mention "' + (keyword||'your keyword') + '" once, naturally, within this first paragraph.', 'var(--teal)');
+      }
+      if(wordAcc >= 130){
+        imgCount++;
+        addCard('🖼️','Image ' + imgCount, 'Insert a supporting image here — after paragraph ' + (i+1) + '. Use descriptive alt text with your keyword if it fits naturally.', '#c98b2e');
+        wordAcc = 0;
+      }
+      if((i+1) % 3 === 0 && i !== paras.length-1){
+        addCard('🔗','Internal link', 'Link to a related post on your own blog from this paragraph.', '#7a5fb8');
+      }
+      if(i === Math.floor(paras.length/2) && paras.length > 3){
+        addCard('🔗','External link', 'Add one authoritative outbound link here (official source, data reference) — boosts credibility.', '#7a5fb8');
+      }
+    });
+
+    addCard('📋','Conclusion', 'Summarize the key point and repeat the focus keyword once, naturally.', 'var(--teal)');
+    addCard('❓','FAQ section', 'Add 3–5 short Q&A pairs targeting related questions — good for "People Also Ask" visibility.', '#c98b2e');
+
+    document.getElementById('abImages').textContent = imgCount + 1; // +1 for featured image
+
+    result.style.display = 'block';
+  });
+
+  document.getElementById('gcCheckBtn').addEventListener('click', async () => {
+    const text = document.getElementById('gcText').value.trim();
+    const status = document.getElementById('gcStatus');
+    const results = document.getElementById('gcResults');
+    results.innerHTML = '';
+    if(!text){ status.textContent = 'Paste some text first.'; return; }
+    status.textContent = 'Checking...';
+    try{
+      const res = await fetch('https://api.languagetool.org/v2/check', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'text=' + encodeURIComponent(text) + '&language=en-US'
+      });
+      const data = await res.json();
+      const matches = data.matches || [];
+      if(!matches.length){
+        status.textContent = 'No issues found — clean draft.';
+        return;
+      }
+      status.textContent = matches.length + ' issue(s) found:';
+      matches.forEach(m => {
+        const bad = text.substring(m.offset, m.offset + m.length);
+        const card = document.createElement('div');
+        card.style.cssText = 'background:#efe8d6; border-radius:8px; padding:14px 16px; margin-bottom:10px;';
+        const sug = (m.replacements||[]).slice(0,3).map(r=>r.value).join(', ');
+        card.innerHTML = '<div style="font-size:13.5px; color:#3a3626; margin-bottom:6px;"><strong style="color:#c0392b;">"'+bad+'"</strong> — ' + m.message + '</div>' +
+          (sug ? '<div style="font-size:12.5px; color:#2d7d6f;">Suggestion: ' + sug + '</div>' : '');
+        results.appendChild(card);
+      });
+    } catch(e){
+      status.textContent = 'Check failed — try again in a moment.';
+    }
+  });
+
+  // Keyword Research (Datamuse API — free, no key, related terms + question ideas)
+  document.getElementById('krBtn').addEventListener('click', async () => {
+    const seed = document.getElementById('krSeed').value.trim();
+    const status = document.getElementById('krStatus');
+    const relatedBox = document.getElementById('krRelated');
+    const qBox = document.getElementById('krQuestions');
+    relatedBox.innerHTML = ''; qBox.innerHTML = '';
+    if(!seed){ status.textContent = 'Type a seed keyword first.'; return; }
+    status.textContent = 'Fetching related terms...';
+    try{
+      const lastWord = seed.split(/\s+/).slice(-1)[0];
+      const res = await fetch('https://api.datamuse.com/words?ml=' + encodeURIComponent(seed) + '&max=16');
+      const data = await res.json();
+      if(!data.length){ status.textContent = 'No related terms found — try a different seed.'; return; }
+      status.textContent = 'Related terms and question ideas for "' + seed + '":';
+      data.forEach(item => {
+        const chip = document.createElement('span');
+        chip.style.cssText = 'background:#fffdf7; border:1px solid #d8cfb4; border-radius:20px; padding:5px 12px; font-size:12.5px; color:#3a3626;';
+        chip.textContent = item.word;
+        relatedBox.appendChild(chip);
+      });
+      const templates = ['how to', 'what is', 'why does', 'best', 'how does'];
+      templates.forEach(t => {
+        const q = document.createElement('div');
+        q.style.cssText = 'background:#fffdf7; border:1px solid #d8cfb4; border-radius:8px; padding:9px 12px; font-size:13.5px; color:#3a3626;';
+        q.textContent = t + ' ' + seed + '?';
+        qBox.appendChild(q);
+      });
+    } catch(e){
+      status.textContent = 'Something went wrong. Try again.';
+    }
+  });
+
+  const pexelsKeyInput = document.getElementById('pexelsKey');
+  pexelsKeyInput.value = localStorage.getItem('pexelsKey') || '';
+
+  document.getElementById('imgSearchBtn').addEventListener('click', async () => {
+    const key = pexelsKeyInput.value.trim();
+    const query = document.getElementById('imgQuery').value.trim();
+    const status = document.getElementById('imgStatus');
+    const grid = document.getElementById('imgGrid');
+    grid.innerHTML = '';
+    if(!key){ status.textContent = 'Paste your free Pexels API key first.'; return; }
+    if(!query){ status.textContent = 'Type a search term.'; return; }
+    localStorage.setItem('pexelsKey', key);
+    status.textContent = 'Searching...';
+    try{
+      const res = await fetch('https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=12', {
+        headers: { Authorization: key }
+      });
+      if(!res.ok){ status.textContent = 'Search failed — check your API key.'; return; }
+      const data = await res.json();
+      if(!data.photos || !data.photos.length){ status.textContent = 'No results found.'; return; }
+      status.textContent = data.photos.length + ' results — click to open full size.';
+      data.photos.forEach(photo => {
+        const a = document.createElement('a');
+        a.href = photo.src.original;
+        a.target = '_blank';
+        a.style.cssText = 'display:block; border-radius:8px; overflow:hidden; border:1px solid #d8cfb4;';
+        const img = document.createElement('img');
+        img.src = photo.src.medium;
+        img.style.cssText = 'width:100%; height:120px; object-fit:cover; display:block;';
+        img.alt = photo.alt || query;
+        a.appendChild(img);
+        grid.appendChild(a);
+      });
+    } catch(e){
+      status.textContent = 'Something went wrong. Try again.';
+    }
+  });
+</script>
+
+</body>
+</html>
